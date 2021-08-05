@@ -5,6 +5,6 @@ import { contactStub } from "../stubss/contact.stub";
 export const ContactsService = jest.fn().mockReturnValue({
  findAll: jest.fn().mockResolvedValue([contactStub()]),
  create: jest.fn().mockResolvedValue(contactStub),
- update: jest.fn().mockResolvedValue([contactStub()]),
- delete: jest.fn().mockResolvedValue([contactStub()])
+ update: jest.fn().mockResolvedValue(UpdateResult),
+ delete: jest.fn().mockResolvedValue(DeleteResult)
 })

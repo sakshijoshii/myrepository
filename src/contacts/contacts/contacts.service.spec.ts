@@ -48,9 +48,17 @@ describe('ContactsService', () => {
     describe('create',() => {
       describe('when create is called', () => {
         let contact:Contact;
-        let newcontact:Contact;
+        let newcontact:Contact= {
+          id:1,
+          firstName: "sakshi",
+          lastName:"dgjh",
+          phone:"dhgj",
+          email:"dgj",
+          city:"ufyh",
+          country:"fhvj"
+        };
         beforeEach(async () =>{
-          contact = await service.create(newcontact);
+          contact = await service.create(contactStub());
         })
   
         test('then it should call create',() => {
@@ -84,7 +92,7 @@ describe('ContactsService', () => {
       })
 
       test('then it should return an updated array of contatcs',() => {
-       expect(contact).toEqual([contactStub()])
+       expect(contact).toEqual(UpdateResult)
       })
     })
 } )
@@ -109,8 +117,8 @@ describe('delete',() => {
       expect(service.delete).toHaveBeenCalledWith(newcontact.id)
     })
 
-    test('then it should return an updated array of contatcs',() => {
-     expect(contact).toEqual([contactStub()]);
+    test('then it should return the array after deleting a contact',() => {
+     expect(contact).toEqual(DeleteResult);
     })
   })
 } )

@@ -13,17 +13,17 @@ import { contactStub } from './stubss/contact.stub';
 jest.mock("./contacts.service");
 
 describe('ContactsService', () => {
-  let controller : ContactsController;
+  //let controller : ContactsController;
   let service: ContactsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers:[ContactsController],
+      //controllers:[ContactsController],
       providers: [ContactsService],
     }).compile();
 
     service = module.get<ContactsService>(ContactsService);
-    controller = module.get<ContactsController>(ContactsController);
+    //controller = module.get<ContactsController>(ContactsController);
   });
 
   /*it('should be defined', () => {

@@ -7,11 +7,11 @@ import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ContactsService {
-    constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache,
+    constructor(
         @InjectRepository(Contact)
         private contactRepository: Repository<Contact>,
     ) { }
-    async  findAll(){
+    /*async  findAll(){
         var contactslist = await this.cacheManager.get<Contact[]>('my-object1');
         if(contactslist){
             console.log("cache")
@@ -23,7 +23,7 @@ export class ContactsService {
         console.log('updated-cache')
         return contactslist
         //return this.contactRepository.find();
-    }
+    }*/
 
     async  create(contact: Contact): Promise<Contact> {
         return await this.contactRepository.save(contact);

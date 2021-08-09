@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { async } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -10,40 +11,59 @@ import { contactStub } from './stubss/contact.stub';
 //import {contactStub} from './stubss/contact.stub'
 
 
-jest.mock("./contacts.service");
+//jest.mock("./contacts.service");
+var newcontact:Contact= {
+  id:1,
+  firstName: "sakshi",
+  lastName:"dgjh",
+  phone:"dhgj",
+  email:"dgj",
+  city:"ufyh",
+  country:"fhvj"
+};
 
 describe('ContactsService', () => {
   //let controller : ContactsController;
   let service: ContactsService;
 
+  const mockContactRepository = {
+    //find: jest.fn().mockImplementation(contactStub),
+    save: jest.fn().mockImplementation(Contact => Contact),
+    update: jest.fn().mockImplementation(newcontact => UpdateResult),
+    delete: jest.fn().mockImplementation(newcontact => DeleteResult)
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      //controllers:[ContactsController],
-      providers: [ContactsService],
-    }).compile();
+      providers: [ContactsService,{
+        provide:getRepositoryToken(Contact),
+        useValue:mockContactRepository
+      }]
+    })
+    .compile();
 
-    service = module.get<ContactsService>(ContactsService);
+    service =await module.get<ContactsService>(ContactsService);
     //controller = module.get<ContactsController>(ContactsController);
   });
 
-  /*it('should be defined', () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
-  });*/
-  describe('findAll',() => {
-    describe('when findAll is called', () => {
+  });
+   /*describe('find',() => {
+    describe('when find is called', () => {
       let contacts:Contact[];
       beforeEach(async () =>{
-        contacts =await service.findAll()
+        contacts =await service.find()
       })
 
       test('then it should call findAll',() => {
-        expect(service.findAll).toBeCalled()
+        expect(mockContactRepository.find).toBeCalled()
       })
 
       test('then it should return all users',() => {
-       expect(contacts).toEqual([contactStub()])
+       expect(contacts).toEqual(contactStub())
       })
-    })
+    })*/
 
     describe('create',() => {
       describe('when create is called', () => {
@@ -58,15 +78,15 @@ describe('ContactsService', () => {
           country:"fhvj"
         };
         beforeEach(async () =>{
-          contact = await service.create(contactStub());
+          contact = await service.create(newcontact);
         })
   
         test('then it should call create',() => {
-          expect(service.create).toHaveBeenCalledWith(newcontact)
+          expect(mockContactRepository.save).toHaveBeenCalled()
         })
   
         test('then it should return a user',() => {
-         expect(contact).toEqual(contactStub)
+         expect(contact).toEqual(contactStub())
         })
       })
   } )
@@ -88,7 +108,7 @@ describe('ContactsService', () => {
       })
 
       test('then it should call update',() => {
-        expect(service.update).toHaveBeenCalledWith(newcontact)
+        expect(mockContactRepository.update).toHaveBeenCalledWith(newcontact.id,newcontact)
       })
 
       test('then it should return an updated array of contatcs',() => {
@@ -114,7 +134,7 @@ describe('delete',() => {
     })
 
     test('then it should call delete',() => {
-      expect(service.delete).toHaveBeenCalledWith(newcontact.id)
+      expect(mockContactRepository.delete).toHaveBeenCalledWith(newcontact.id)
     })
 
     test('then it should return the array after deleting a contact',() => {
@@ -122,5 +142,4 @@ describe('delete',() => {
     })
   })
 } )
-  })
-})
+   })

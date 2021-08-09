@@ -3,18 +3,24 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { Contact } from './contact.entity';
 //import { ContactsController } from './contacts.controller';
 import { ContactsController } from './contacts.controller';
+//import { ContactsService } from './contacts.service';
 import { contactStub } from './stubss/contact.stub';
-jest.mock("./contacts.controller");
+//import { ContactsServiceMock } from './__mocks__/contacts.service';
+import { ContactsService } from './__mocks__/contacts.service';
+jest.mock("./contacts.service");
 
 describe('ContactsController', () => {
   let controller: ContactsController;
+  let service;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ContactsController],
+      providers:[ContactsService]
     }).compile();
 
     controller = module.get<ContactsController>(ContactsController);
+    service = module.get(ContactsService)
   });
 
   it('should be defined', () => {
@@ -24,11 +30,11 @@ describe('ContactsController', () => {
     describe('when findAll is called', () => {
       let contacts:Contact[];
       beforeEach(async () =>{
-        contacts =await controller.index()
+        contacts =await service.findAll()
       })
 
       test('then it should call findAll',() => {
-        expect(controller.index).toBeCalled()
+        expect(service.findAll).toBeCalled()
       })
 
       test('then it should return all users',() => {
@@ -49,11 +55,11 @@ describe('ContactsController', () => {
           country:"fhvj"
         };
         beforeEach(async () =>{
-          contact = await controller.create(contactStub());
+          contact = await service.create(contactStub());
         })
   
         test('then it should call create',() => {
-          expect(controller.create).toHaveBeenCalledWith(newcontact)
+          expect(service.create).toHaveBeenCalledWith(newcontact)
         })
   
         test('then it should return a user',() => {
@@ -75,11 +81,11 @@ describe('ContactsController', () => {
         country:"fhvj"
       };
       beforeEach(async () =>{
-       contact = await controller.update(contactStub().id,contactStub())
+       contact = await service.update(contactStub())
       })
 
       test('then it should call update',() => {
-        expect(controller.update).toHaveBeenCalledWith(newcontact.id,newcontact)
+        expect(service.update).toHaveBeenCalledWith(newcontact)
       })
 
       test('then it should return an updated array of contatcs',() => {
@@ -101,11 +107,11 @@ describe('delete',() => {
       country:"sgj"
     };
     beforeEach(async () =>{
-      contact =await controller.delete(contactStub().id)
+      contact =await service.delete(contactStub().id)
     })
 
     test('then it should call delete',() => {
-      expect(controller.delete).toHaveBeenCalledWith(newcontact.id)
+      expect(service.delete).toHaveBeenCalledWith(newcontact.id)
     })
 
     test('then it should return the array after deleting a contact',() => {

@@ -13,13 +13,16 @@ export class ForbiddenException extends HttpException {
 
     @Controller('contacts')
     export class ContactsController {
+        findAll(findAll: any) {
+          throw new Error('Method not implemented.');
+        }
         constructor(private contactsService: ContactsService){}
     
-        @Get()
+        /*@Get()
         //@UseInterceptors(CacheInterceptor)
         index() {
           return this.contactsService.findAll();
-        } 
+        } */
         @Get('error')
         @UseFilters(HttpExceptionFilter)
         getHello(){
